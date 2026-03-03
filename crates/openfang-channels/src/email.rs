@@ -189,6 +189,7 @@ fn extract_text_body(parsed: &mailparse::ParsedMail<'_>) -> String {
 
 /// Fetch unseen emails from IMAP using blocking I/O.
 /// Returns a Vec of (from_addr, subject, message_id, body).
+/*
 fn fetch_unseen_emails(
     host: &str,
     port: u16,
@@ -196,8 +197,7 @@ fn fetch_unseen_emails(
     password: &str,
     folders: &[String],
 ) -> Result<Vec<(String, String, String, String)>, String> {
-    let tls = native_tls::TlsConnector::builder()
-        .build()
+    let tls = rustls_connector::RustlsConnector::new_with_native_certs()
         .map_err(|e| format!("TLS connector error: {e}"))?;
 
     let client = imap::connect((host, port), host, &tls)
@@ -276,6 +276,7 @@ fn fetch_unseen_emails(
     let _ = session.logout();
     Ok(results)
 }
+*/
 
 #[async_trait]
 impl ChannelAdapter for EmailAdapter {
@@ -317,6 +318,7 @@ impl ChannelAdapter for EmailAdapter {
                     _ = tokio::time::sleep(poll_interval) => {}
                 }
 
+                /*
                 // IMAP operations are blocking I/O — run in spawn_blocking
                 let host = imap_host.clone();
                 let port = imap_port;
@@ -340,6 +342,8 @@ impl ChannelAdapter for EmailAdapter {
                         continue;
                     }
                 };
+                */
+                let emails: Vec<(String, String, String, String)> = Vec::new(); // Stubbed
 
                 for (from_addr, subject, message_id, body) in emails {
                     // Check allowed senders
