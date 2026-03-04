@@ -5,7 +5,8 @@ set -e
 # This script detects the OS and architecture, downloads the latest release from GitHub,
 # and installs the 'openfang' binary to /usr/local/bin.
 
-REPO="RightNow-AI/openfang"
+REPO="joudrodiak/openfang-joud"
+BRANCH="feat/grok"
 BINARY_NAME="openfang"
 
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -30,19 +31,8 @@ FILENAME="openfang-${TARGET}.tar.gz"
 
 echo "Detected Platform: $TARGET"
 
-# Get the latest release tagging from GitHub
-echo "Fetching latest release information..."
-LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-
-if [ -z "$LATEST_RELEASE" ]; then
-    echo "Error: Could not find latest release for $REPO"
-    exit 1
-fi
-
-echo "Latest Release: $LATEST_RELEASE"
-
-# Download URL
-DOWNLOAD_URL="https://github.com/$REPO/releases/download/$LATEST_RELEASE/$FILENAME"
+# Download URL (from the feat/grok branch directly)
+DOWNLOAD_URL="https://github.com/$REPO/raw/$BRANCH/$FILENAME"
 
 echo "Downloading $DOWNLOAD_URL..."
 curl -L -o "$FILENAME" "$DOWNLOAD_URL"
