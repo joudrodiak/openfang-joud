@@ -38,7 +38,7 @@ const PROVIDERS: &[ProviderInfo] = &[
     },
     ProviderInfo {
         name: "xai",
-        display: "xAI (Grok)",
+        display: "xAI (Grok) !!!",
         env_var: "XAI_API_KEY",
         default_model: "grok-3-mini",
         needs_key: true,
