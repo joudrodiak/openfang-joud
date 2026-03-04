@@ -1301,7 +1301,7 @@ fn detect_best_provider() -> (&'static str, &'static str, &'static str) {
 fn provider_list() -> Vec<(&'static str, &'static str, &'static str, &'static str)> {
     vec![
         ("groq", "GROQ_API_KEY", "llama-3.3-70b-versatile", "Groq"),
-        ("xai", "XAI_API_KEY", "grok-4.1-fast", "xAI (Grok)"),
+        ("xai", "XAI_API_KEY", "grok-3-mini", "xAI (Grok)"),
         ("gemini", "GEMINI_API_KEY", "gemini-2.5-flash", "Gemini"),
         ("deepseek", "DEEPSEEK_API_KEY", "deepseek-chat", "DeepSeek"),
         (
@@ -2242,6 +2242,7 @@ decay_rate = 0.05
     }
     let provider_keys = [
         ("GROQ_API_KEY", "Groq", "groq"),
+        ("XAI_API_KEY", "xAI (Grok)", "xai"),
         ("OPENROUTER_API_KEY", "OpenRouter", "openrouter"),
         ("ANTHROPIC_API_KEY", "Anthropic", "anthropic"),
         ("OPENAI_API_KEY", "OpenAI", "openai"),
@@ -4144,6 +4145,10 @@ pub(crate) fn test_api_key(provider: &str, env_var: &str) -> bool {
             .send(),
         "openrouter" => client
             .get("https://openrouter.ai/api/v1/models")
+            .bearer_auth(&key)
+            .send(),
+        "xai" => client
+            .get("https://api.x.ai/v1/models")
             .bearer_auth(&key)
             .send(),
         _ => return true, // unknown provider — skip test

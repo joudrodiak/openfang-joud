@@ -1,0 +1,5 @@
+target/
+*.tar.gz
+*.core
+.vagrant/
+.DS_Store

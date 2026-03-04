@@ -98,6 +98,13 @@ const BUILTIN_TEMPLATES: &[(&str, &str, &str, &str, &str)] = &[
         "groq",
         "llama-3.3-70b-versatile",
     ),
+    (
+        "Grok Assistant",
+        "Fast and intelligent assistant powered by xAI Grok",
+        "General",
+        "xai",
+        "grok-3-mini",
+    ),
 ];
 
 // ── Categories ──────────────────────────────────────────────────────────────

@@ -34,6 +34,7 @@ const PROVIDER_ENV_VARS: &[(&str, &str)] = &[
     ("DEEPSEEK_API_KEY", "DeepSeek"),
     ("GEMINI_API_KEY", "Gemini"),
     ("GOOGLE_API_KEY", "Gemini"),
+    ("XAI_API_KEY", "xAI (Grok)"),
     ("GROQ_API_KEY", "Groq"),
     ("OPENROUTER_API_KEY", "OpenRouter"),
     ("TOGETHER_API_KEY", "Together"),
