@@ -13,14 +13,19 @@ pub fn env_file_path() -> Option<PathBuf> {
 
 /// Load `~/.openfang/.env` and `~/.openfang/secrets.env` into `std::env`.
 ///
-/// System env vars take priority — existing vars are NOT overridden.
-/// `secrets.env` is loaded second so `.env` values take priority over secrets
-/// (but both yield to system env vars).
+/// `~/.openfang/.env` values ALWAYS override system env vars — this is the
+/// user's explicit configuration saved by the init wizard, and it must win
+/// over stale shell exports (e.g. a wrong XAI_API_KEY set on a VPS).
+///
+/// `secrets.env` (written by the dashboard "Set API Key" button) only fills
+/// in keys that are not yet set, so `.env` takes priority over it too.
+///
 /// Silently does nothing if the files don't exist.
 pub fn load_dotenv() {
-    load_env_file(env_file_path());
-    // Also load secrets.env (written by dashboard "Set API Key" button)
-    load_env_file(secrets_env_path());
+    // .env is authoritative — always override system env
+    load_env_file(env_file_path(), true);
+    // secrets.env fills in anything still missing
+    load_env_file(secrets_env_path(), false);
 }
 
 /// Return the path to `~/.openfang/secrets.env`.
@@ -28,7 +33,12 @@ pub fn secrets_env_path() -> Option<PathBuf> {
     dirs::home_dir().map(|h| h.join(".openfang").join("secrets.env"))
 }
 
-fn load_env_file(path: Option<PathBuf>) {
+/// Load a `.env`-format file.
+///
+/// When `override_existing` is true, values from the file always win over
+/// whatever is currently in the process environment. When false, only missing
+/// vars are filled in.
+fn load_env_file(path: Option<PathBuf>, override_existing: bool) {
     let path = match path {
         Some(p) => p,
         None => return,
@@ -46,7 +56,7 @@ fn load_env_file(path: Option<PathBuf>) {
         }
 
         if let Some((key, value)) = parse_env_line(trimmed) {
-            if std::env::var(&key).is_err() {
+            if override_existing || std::env::var(&key).is_err() {
                 std::env::set_var(&key, &value);
             }
         }

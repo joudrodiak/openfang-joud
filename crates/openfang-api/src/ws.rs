@@ -1107,7 +1107,9 @@ fn classify_streaming_error(err: &openfang_kernel::error::KernelError) -> String
         llm_errors::LlmErrorCategory::Billing => {
             "Check provider account status (billing issue detected).".to_string()
         }
-        llm_errors::LlmErrorCategory::Auth => "Verify your API key in config.".to_string(),
+        llm_errors::LlmErrorCategory::Auth => {
+            "API key rejected by provider. Run `openfang init` to reconfigure your key.".to_string()
+        }
         llm_errors::LlmErrorCategory::ModelNotFound => {
             "Model unavailable. Use /model to see options.".to_string()
         }
