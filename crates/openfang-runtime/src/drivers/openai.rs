@@ -320,7 +320,7 @@ impl LlmDriver for OpenAIDriver {
 
             if !self.api_key.as_str().is_empty() {
                 req_builder = req_builder
-                    .header("authorization", format!("Bearer {}", self.api_key.as_str()));
+                    .header("Authorization", format!("Bearer {}", self.api_key.as_str()));
             }
 
             let resp = req_builder
@@ -621,7 +621,7 @@ impl LlmDriver for OpenAIDriver {
 
             if !self.api_key.as_str().is_empty() {
                 req_builder = req_builder
-                    .header("authorization", format!("Bearer {}", self.api_key.as_str()));
+                    .header("Authorization", format!("Bearer {}", self.api_key.as_str()));
             }
 
             let resp = req_builder
