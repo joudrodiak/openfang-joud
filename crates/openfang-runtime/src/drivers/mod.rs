@@ -209,6 +209,7 @@ pub fn create_driver(config: &DriverConfig) -> Result<Arc<dyn LlmDriver>, LlmErr
             .api_key
             .clone()
             .or_else(|| std::env::var("ANTHROPIC_API_KEY").ok())
+            .map(|k| k.trim().to_string())
             .ok_or_else(|| {
                 LlmError::MissingApiKey("Set ANTHROPIC_API_KEY environment variable".to_string())
             })?;
@@ -226,6 +227,7 @@ pub fn create_driver(config: &DriverConfig) -> Result<Arc<dyn LlmDriver>, LlmErr
             .clone()
             .or_else(|| std::env::var("GEMINI_API_KEY").ok())
             .or_else(|| std::env::var("GOOGLE_API_KEY").ok())
+            .map(|k| k.trim().to_string())
             .ok_or_else(|| {
                 LlmError::MissingApiKey(
                     "Set GEMINI_API_KEY or GOOGLE_API_KEY environment variable".to_string(),
@@ -245,6 +247,7 @@ pub fn create_driver(config: &DriverConfig) -> Result<Arc<dyn LlmDriver>, LlmErr
             .clone()
             .or_else(|| std::env::var("OPENAI_API_KEY").ok())
             .or_else(crate::model_catalog::read_codex_credential)
+            .map(|k| k.trim().to_string())
             .ok_or_else(|| {
                 LlmError::MissingApiKey(
                     "Set OPENAI_API_KEY or install Codex CLI".to_string(),
@@ -271,6 +274,7 @@ pub fn create_driver(config: &DriverConfig) -> Result<Arc<dyn LlmDriver>, LlmErr
             .api_key
             .clone()
             .or_else(|| std::env::var("GITHUB_TOKEN").ok())
+            .map(|k| k.trim().to_string())
             .ok_or_else(|| {
                 LlmError::MissingApiKey(
                     "Set GITHUB_TOKEN environment variable for GitHub Copilot".to_string(),
@@ -292,7 +296,9 @@ pub fn create_driver(config: &DriverConfig) -> Result<Arc<dyn LlmDriver>, LlmErr
             .api_key
             .clone()
             .or_else(|| std::env::var(defaults.api_key_env).ok())
-            .unwrap_or_default();
+            .unwrap_or_default()
+            .trim()
+            .to_string();
 
         if defaults.key_required && api_key.is_empty() {
             return Err(LlmError::MissingApiKey(format!(
@@ -311,7 +317,7 @@ pub fn create_driver(config: &DriverConfig) -> Result<Arc<dyn LlmDriver>, LlmErr
 
     // Unknown provider — if base_url is set, treat as custom OpenAI-compatible
     if let Some(ref base_url) = config.base_url {
-        let api_key = config.api_key.clone().unwrap_or_default();
+        let api_key = config.api_key.clone().unwrap_or_default().trim().to_string();
         return Ok(Arc::new(openai::OpenAIDriver::new(
             api_key,
             base_url.clone(),
